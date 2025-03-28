@@ -8,7 +8,8 @@ import time
 import random
 
 url = 'https://hamrobazaar.com/category/cars/EB9C8147-07C0-4951-A962-381CDB400E37/F93D355F-CC20-4FFE-9CB7-6C7CDFF1DC50'
- 
+
+# Path to your ChromeDriver executable (Update it as necessary)
 chrome_driver_path = 'C:/Users/rijal/OneDrive/Desktop/Web_Scraping/chromedriver.exe'
 
 service = Service(chrome_driver_path)
