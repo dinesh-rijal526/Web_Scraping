@@ -1,4 +1,3 @@
-# Import necessary modules from Selenium and other libraries
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -8,13 +7,10 @@ import csv
 import time
 import random
 
-# URL of the webpage to scrape
 url = 'https://hamrobazaar.com/category/cars/EB9C8147-07C0-4951-A962-381CDB400E37/F93D355F-CC20-4FFE-9CB7-6C7CDFF1DC50'
-
-# Path to your ChromeDriver executable 
+ 
 chrome_driver_path = 'C:/Users/rijal/OneDrive/Desktop/Web_Scraping/chromedriver.exe'
 
-# Set up the Chrome WebDriver service and options
 service = Service(chrome_driver_path)
 options = webdriver.ChromeOptions()
 driver = webdriver.Chrome(service=service, options=options)
@@ -47,7 +43,6 @@ def get_comments(link):
         
         comments = []
         try:
-            # Wait up to 5 seconds for the comment container to appear
             WebDriverWait(driver, 5).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "article.comment--body"))
             )
@@ -57,12 +52,10 @@ def get_comments(link):
                 driver.execute_script("window.scrollBy(0, 300)")
                 time.sleep(random.uniform(0.5, 1.0))
             
-            # Find and collect the comment texts
             comment_elements = driver.find_elements(By.CSS_SELECTOR, "p.user__text")
             comments = [comment.text.strip() for comment in comment_elements]
             
         except Exception as inner_error:
-            # Print a short error message if comments cannot be found
             print(f"Comments not found: {str(inner_error)[:60]}")
         
         finally:
@@ -74,22 +67,18 @@ def get_comments(link):
         return comments
     
     except Exception as error:
-        # If there is a failure in processing comments, print an error and return an empty list
         print(f"Failed to process comments: {str(error)[:60]}")
         return []
 
 try:
-    # Navigate to the main URL
     driver.get(url)
 
     # Continue scraping until we have at least 60 listings or we reach the maximum number of attempts
     while len(cars_data) < 60 and attempt < max_attempts:
-        # Wait until the main list of products is loaded
         WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "div.product-list"))
         )
         
-        # Find all the listings on the current page
         listings = driver.find_elements(By.CSS_SELECTOR, "div.card-product-linear")
         print(f"Found {len(listings)} listings on attempt {attempt + 1}")
         
@@ -133,7 +122,6 @@ try:
                     break
                     
             except Exception as e:
-                # If an error occurs while processing a listing, skip it and continue
                 print(f"Skipped listing: {str(e)[:60]}")
                 continue
 
@@ -147,16 +135,13 @@ try:
             driver.execute_script("window.scrollBy(0, -200)")
             time.sleep(0.5)
             
-        # Increase the attempt counter
         attempt += 1
         
 finally:
-    # Ensure the driver is properly closed when done
     driver.quit()
 
 # Save the collected data into a CSV file
 with open("car_data.csv", "w", newline="", encoding="utf-8") as csvfile:
-    # Define which fields to write in the CSV file
     fieldnames = ["Title", "User","Price" ,"Condition" ,"Location", "Details", "Comments"]
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     
