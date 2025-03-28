@@ -160,4 +160,4 @@ with open("car_data.csv", "w", newline="", encoding="utf-8") as csvfile:
             "Comments": " | ".join(entry["Comments"]) if entry["Comments"] else "--No Comments--"
         })
 
-print(f"Successfully scraped {len(cars_data)} listings with comments!")
+print(f"Successfully scraped {len(cars_data)} listings ")
